@@ -1,0 +1,2 @@
+. ./env
+python2.5 ../python-tests/hmm_viterbi.py

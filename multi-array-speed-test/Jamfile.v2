@@ -1,0 +1,11 @@
+project multi-array-speed-test
+        : requirements
+                <include>$(BOOST_ROOT)
+        : usage-requirements
+        ;
+
+
+exe multi-array-speed-test
+	:
+		multi-array-speed-test.cpp
+	;

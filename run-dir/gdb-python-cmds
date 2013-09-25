@@ -1,0 +1,5 @@
+file /usr/bin/python2.5
+run /usr/bin/ipython -pylab -pdb
+catch throw
+b main
+c

@@ -1,0 +1,13 @@
+root_dir=/home/john/Dev/MyProjects/Bio/bin/hmm/gcc-4.3
+so_name=_stempy.so
+if [ $root_dir/debug/$so_name -nt $root_dir/release/$so_name -o ! -r $root_dir/release/$so_name ]
+then
+  version=debug
+else
+  version=release
+fi
+echo "Using $version version"
+
+export LD_LIBRARY_PATH="/home/john/Dev/MyProjects/Bio/bin/hmm/gcc-4.3/$version:/home/john/Dev/ThirdParty/boost/boost-trunk/bin.v2/libs/filesystem/build/gcc-4.3/$version:/home/john/Dev/ThirdParty/boost/boost-trunk/bin.v2/libs/python/build/gcc-4.3/$version:/home/john/Dev/ThirdParty/boost/boost-trunk/bin.v2/libs/serialization/build/gcc-4.3/$version:/home/john/Dev/ThirdParty/boost/boost-trunk/bin.v2/libs/system/build/gcc-4.3/$version:/home/john/local/bin:/home/john/local/lib:/home/john/local/lib32:/home/john/local/lib64:$LD_LIBRARY_PATH"
+
+export PYTHONPATH="/home/john/Dev/MyProjects/Bio/bin/hmm/gcc-4.3/$version"

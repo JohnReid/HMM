@@ -1,0 +1,177 @@
+#
+# Copyright John Reid 2006, 2007, 2008, 2009, 2011, 2012, 2013
+#
+
+#
+# sub-project hmm
+#
+
+import os ;
+import path ;
+
+
+
+
+#
+# Project Hmm
+#
+project Hmm
+    : requirements
+        <include>.
+        <source>$(MYRRH_ROOT)//myrrh
+        # <toolset>gcc:<cxxflags>"-fpermissive"
+        <define>BOOST_PYTHON_NO_PY_SIGNATURES
+        <include>$(NUMPY_PATH)/numpy/core/include
+        <include>$(BOOST_INDEXING_SUITE)
+        <variant>release:<define>BOOST_DISABLE_ASSERTS
+        <variant>debug:<python-debugging>on
+    : usage-requirements
+        <include>.
+        <source>$(MYRRH_ROOT)//myrrh
+    : default-build release
+    ;
+alias hmm ; # Header only library
+
+
+
+
+
+#
+# Python extension for HMM
+#
+python-extension _hmm
+    : # sources
+        src/python_module_hmm.cpp
+        src/python_model.cpp
+        src/python_model_by_states.cpp
+        src/python_markov_order.cpp
+        src/python_simple_pssm.cpp
+        /boost/python//boost_python
+        /boost/system//boost_system
+        /boost/serialization//boost_serialization
+        /boost/filesystem//boost_filesystem
+        /site-config//gsl
+    :
+        <toolset>msvc:<cxxflags>"/fp:precise"
+    ;
+
+
+
+#
+# Python extension for floating point control
+#
+if [ os.name ] != "LINUX" {
+    python-extension _fpu
+        : # sources
+            src/python_module_fpu.cpp
+            /boost/python//boost_python
+        ;
+
+    EXTENSIONS = _hmm _fpu ;
+}
+else
+{
+    EXTENSIONS = _hmm ;
+}
+
+
+
+
+#
+# Installation
+#
+install install_ext
+    :
+        $(EXTENSIONS)
+    :
+        <location>../Python/hmm
+        <install-dependencies>off 
+    ;
+install install_so
+    :
+        /boost/python//boost_python 
+        /boost/system//boost_system
+        /boost/serialization//boost_serialization
+        /boost/filesystem//boost_filesystem
+        $(MYRRH_ROOT)//myrrh_pylib
+    :
+        <location>$(BIO_DIST_DIR)
+        # <variant>debug:<location>$(BIO_DIST_DIR)/debug
+        <install-dependencies>off
+    ;
+alias install_all : install_so install_ext ;
+
+
+
+
+
+#
+# Test
+#
+TEST_SRCS =
+    serialisation
+    count_mers
+    consensus
+    markov_order
+    hmm_ll_increases
+    hmm_model
+    ;
+
+for SRC in $(TEST_SRCS)
+{
+    unit-test test_$(SRC)
+        :
+            src/test/test_$(SRC).cpp
+            /boost/test//boost_unit_test_framework/<link>static
+            /boost/serialization//boost_serialization
+            /boost/filesystem//boost_filesystem
+            /boost/system//boost_system
+            #/boost/python//boost_python
+            /site-config//gsl
+            #/site-config//python_lib
+        :
+            # <testing.launcher>valgrind
+            <toolset>msvc:<cxxflags>"/fp:precise"
+        ;
+    # explicit test_$(SRC) ;
+}
+
+alias all_tests : test_$(TEST_SRCS) ;
+# explicit all_tests ;
+
+
+
+#
+# Python tests
+#
+bpl-test test_hmm_serialisation
+    :
+        python-tests/hmm_serialisation.py
+        _hmm
+    ;
+
+bpl-test hmm_viterbi_test
+    :
+        python-tests/hmm_viterbi.py
+        _hmm
+    ;
+# explicit hmm_viterbi_test ;
+
+
+#
+# Sandbox
+#
+for local file in [ glob src/sandbox/*.cpp ]
+{
+    local target = [ path.basename $(file) ] ;
+    exe $(target)
+        :
+            $(file)
+        :
+            <include>$(BOOST_ROOT)
+        ;
+    SANDBOX_TARGETS += $(target) ;
+    explicit $(target) ;
+}
+alias sandbox : $(SANDBOX_TARGETS) ;
+explicit sandbox ;
