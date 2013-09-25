@@ -18,7 +18,7 @@ import path ;
 project Hmm
     : requirements
         <include>.
-        <source>$(MYRRH_ROOT)//myrrh
+        <source>.//myrrh
         # <toolset>gcc:<cxxflags>"-fpermissive"
         <define>BOOST_PYTHON_NO_PY_SIGNATURES
         <include>$(NUMPY_PATH)/numpy/core/include
@@ -27,7 +27,7 @@ project Hmm
         <variant>debug:<python-debugging>on
     : usage-requirements
         <include>.
-        <source>$(MYRRH_ROOT)//myrrh
+        <source>.//myrrh
     : default-build release
     ;
 alias hmm ; # Header only library
@@ -93,7 +93,7 @@ install install_so
         /boost/system//boost_system
         /boost/serialization//boost_serialization
         /boost/filesystem//boost_filesystem
-        $(MYRRH_ROOT)//myrrh_pylib
+        .//myrrh_pylib
     :
         <location>$(BIO_DIST_DIR)
         # <variant>debug:<location>$(BIO_DIST_DIR)/debug
