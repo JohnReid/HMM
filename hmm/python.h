@@ -1,7 +1,7 @@
 /**
 @file
 
-Copyright John Reid 2006, 2007, 2008
+Copyright John Reid 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014
 
 */
 
@@ -24,7 +24,7 @@ Copyright John Reid 2006, 2007, 2008
 #include <boost/python/tuple.hpp>
 #include <boost/python/module.hpp>
 #include <boost/python/refcount.hpp>
-#include <boost/python/suite/indexing/vector.hpp>
+#include <indexing_suite/vector.hpp>
 
 
 /*
