@@ -12,6 +12,10 @@ import path ;
 
 
 
+path-constant RELEASE_INSTALL_DIR : python/hmm/_release_build ;
+path-constant DEBUG_INSTALL_DIR : module/hmm/_debug_build ;
+
+
 #
 # Project Hmm
 #
@@ -37,6 +41,14 @@ alias hmm ; # Header only library
 lib sandbox2 : sandbox/multi_array_range.cpp ;
 explicit sandbox2 ;
 
+
+
+local PY_EXT_REQS =
+    <variant>release:<linkflags>-Wl,-rpath,$(RELEASE_INSTALL_DIR)
+    <variant>debug:<linkflags>-Wl,-rpath,$(DEBUG_INSTALL_DIR)
+    <target-os>linux:<source>/site-config//rt
+    ;
+
 #
 # Python extension for HMM
 #
@@ -55,6 +67,7 @@ python-extension _hmm
         /site-config//gsl
     :
         <toolset>msvc:<cxxflags>"/fp:precise"
+        $(PY_EXT_REQS)
     ;
 
 
@@ -67,6 +80,8 @@ if [ os.name ] != "LINUX" {
         : # sources
             src/python_module_fpu.cpp
             /boost/python//boost_python
+        :
+            $(PY_EXT_REQS)
         ;
 
     EXTENSIONS = _hmm _fpu ;
@@ -86,8 +101,8 @@ install install_ext
     :
         $(EXTENSIONS)
     :
-        <location>../Python/hmm
-        <install-dependencies>off 
+        <variant>release:<location>$(RELEASE_INSTALL_DIR)
+        <variant>debug:<location>$(DEBUG_INSTALL_DIR)
     ;
 install install_so
     :
@@ -97,13 +112,41 @@ install install_so
         /boost/filesystem//boost_filesystem
         # .//myrrh_pylib
     :
-        <location>$(BIO_DIST_DIR)
-        # <variant>debug:<location>$(BIO_DIST_DIR)/debug
+        <variant>release:<location>$(RELEASE_INSTALL_DIR)
+        <variant>debug:<location>$(DEBUG_INSTALL_DIR)
+    ;
+explicit install_so ;
+alias install_all : install_so install_ext ;
+explicit install_all ;
+
+
+
+install lib_install
+    :
+        /boost/python//boost_python
+        /boost/system//boost_system
+        /boost/filesystem//boost_filesystem
+        /boost/date_time//boost_date_time
+        hmm/myrrh//myrrh_pylib
+        fast
+        pvalues
+        steme
+        meme
+    :
+    ;
+
+install ext_install
+    :
+        _stempy
+        _index
+        _index_genome
+    :
+        <variant>release:<location>$(RELEASE_INSTALL_DIR)
+        <variant>debug:<location>$(DEBUG_INSTALL_DIR)
         <install-dependencies>off
     ;
-alias install_all : install_so install_ext ;
 
-
+alias install : lib_install ext_install ;
 
 
 
