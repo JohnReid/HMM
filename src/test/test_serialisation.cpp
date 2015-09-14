@@ -1,3 +1,11 @@
+/**
+@file
+
+Copyright John Reid 2015
+
+*/
+
+// #define BOOST_TEST_MODULE serialisation  // Name test module
 
 #include <hmm/defs.h>
 #include "test.h"
@@ -31,28 +39,28 @@ namespace boost {
 #define NUM_STATES 2
 
 const std::vector< unsigned > markov_orders = list_of
-	(   0 )
-	(   1 )
-	(   2 )
-	(   3 )
-	(   4 )
-	(   5 )
-	//(  15 ) too big for unsigned
-	//( 100 )
-	//( 999 )
-	;
+    (   0 )
+    (   1 )
+    (   2 )
+    (   3 )
+    (   4 )
+    (   5 )
+    //(  15 ) too big for unsigned
+    //( 100 )
+    //( 999 )
+    ;
 
 template< typename T >
 void check_serialisation_equals( T & t ) {
-	const std::string filename = "test_serialisation.test";
+    const std::string filename = "test_serialisation.test";
 
-	// save data to archive
+    // save data to archive
     {
-		std::ofstream ofs( filename.c_str() );
+        std::ofstream ofs( filename.c_str() );
         boost::archive::text_oarchive oa( ofs );
         // write class instance to archive
         oa << t;
-    	// archive and stream closed when destructors are called
+        // archive and stream closed when destructors are called
     }
 
     // ... some time later restore the class instance to its orginal state
@@ -65,9 +73,9 @@ void check_serialisation_equals( T & t ) {
         ia >> t_copy;
         // archive and stream closed when destructors are called
     }
-	boost::filesystem::remove( filename );
+    boost::filesystem::remove( filename );
 
-	BOOST_CHECK_EQUAL( t, t_copy );
+    BOOST_CHECK_EQUAL( t, t_copy );
 }
 
 typedef boost::multi_array< double, 2 > array_t;
@@ -76,24 +84,24 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( optional_t );
 BOOST_TEST_DONT_PRINT_LOG_VALUE( array_t );
 
 void check_optional_serialisation() {
-	cout << "******* check_optional_serialisation()" << endl;
+    cout << "******* check_optional_serialisation()" << endl;
 
-	optional_t empty;
-	optional_t not_empty( 1 );
-	check_serialisation_equals( empty );
-	check_serialisation_equals( not_empty );
+    optional_t empty;
+    optional_t not_empty( 1 );
+    check_serialisation_equals( empty );
+    check_serialisation_equals( not_empty );
 }
 
 
 void check_multi_array_serialisation() {
-	cout << "******* check_multi_array_serialisation()" << endl;
+    cout << "******* check_multi_array_serialisation()" << endl;
 
-	array_t a( boost::extents[ 2 ][ 2 ] );
-	a[0][0] = 1.;
-	a[1][0] = 2.;
-	a[0][1] = 3.;
-	a[1][1] = 4.;
-	check_serialisation_equals( a );
+    array_t a( boost::extents[ 2 ][ 2 ] );
+    a[0][0] = 1.;
+    a[1][0] = 2.;
+    a[0][1] = 3.;
+    a[1][1] = 4.;
+    check_serialisation_equals( a );
 }
 
 
@@ -106,18 +114,18 @@ BOOST_TEST_DONT_PRINT_LOG_VALUE( hmm::param_idx_array );
 void
 check_serialisation( unsigned markov_order )
 {
-	cout << "******* check_serialisation(): " << markov_order << endl;
-	
-	const std::string filename = "test_serialisation.hmm"; 
-	model::ptr m = create_random_fully_connected_model( NUM_STATES, myrrh::int_power( ALPHABET_SIZE, markov_order + 1 ), markov_order );
+    cout << "******* check_serialisation(): " << markov_order << endl;
+    
+    const std::string filename = "test_serialisation.hmm"; 
+    model::ptr m = create_random_fully_connected_model( NUM_STATES, myrrh::int_power( ALPHABET_SIZE, markov_order + 1 ), markov_order );
 
-	// save data to archive
+    // save data to archive
     {
-		std::ofstream ofs( filename.c_str() );
+        std::ofstream ofs( filename.c_str() );
         boost::archive::text_oarchive oa( ofs );
         // write class instance to archive
         oa << m;
-    	// archive and stream closed when destructors are called
+        // archive and stream closed when destructors are called
     }
 
     // ... some time later restore the class instance to its orginal state
@@ -130,44 +138,49 @@ check_serialisation( unsigned markov_order )
         ia >> m_copy;
         // archive and stream closed when destructors are called
     }
-	boost::filesystem::remove( filename );
+    boost::filesystem::remove( filename );
 
-	BOOST_CHECK_EQUAL( m->converter, m_copy->converter );
-	BOOST_CHECK_EQUAL( m->N, m_copy->N );
-	BOOST_CHECK_EQUAL( m->M, m_copy->M );
-	BOOST_CHECK_EQUAL( m->P, m_copy->P );
-	//BOOST_CHECK_EQUAL( m->theta, m_copy->theta );
-	BOOST_CHECK_EQUAL( m->pi_parameterisation, m_copy->pi_parameterisation );
-	//BOOST_CHECK_EQUAL( m->pi_normaliser, m_copy->pi_normaliser );
-	BOOST_CHECK_EQUAL( m->a_parameterisation, m_copy->a_parameterisation );
-	//BOOST_CHECK_EQUAL( m->a_normaliser, m_copy->a_normaliser );
-	BOOST_CHECK_EQUAL( m->b_parameterisation, m_copy->b_parameterisation );
-	//BOOST_CHECK_EQUAL( m->b_normaliser, m_copy->b_normaliser );
+    BOOST_CHECK_EQUAL( m->converter, m_copy->converter );
+    BOOST_CHECK_EQUAL( m->N, m_copy->N );
+    BOOST_CHECK_EQUAL( m->M, m_copy->M );
+    BOOST_CHECK_EQUAL( m->P, m_copy->P );
+    //BOOST_CHECK_EQUAL( m->theta, m_copy->theta );
+    BOOST_CHECK_EQUAL( m->pi_parameterisation, m_copy->pi_parameterisation );
+    //BOOST_CHECK_EQUAL( m->pi_normaliser, m_copy->pi_normaliser );
+    BOOST_CHECK_EQUAL( m->a_parameterisation, m_copy->a_parameterisation );
+    //BOOST_CHECK_EQUAL( m->a_normaliser, m_copy->a_normaliser );
+    BOOST_CHECK_EQUAL( m->b_parameterisation, m_copy->b_parameterisation );
+    //BOOST_CHECK_EQUAL( m->b_normaliser, m_copy->b_normaliser );
 }
 
 
-
-test_suite *
-init_unit_test_suite( int argc, char * argv [] )
+bool
+init_unit_test()
 {
-	test_suite * test = BOOST_TEST_SUITE( "Serialisation test suite" );
+    test_suite * test = &boost::unit_test::framework::master_test_suite();
+    test->p_name.value = "Serialisation test suite";
 
-	try
-	{
-		test->add( BOOST_TEST_CASE( &check_optional_serialisation ), 0 );
-		test->add( BOOST_TEST_CASE( &check_multi_array_serialisation ), 0 );
-		test->add( 
-			BOOST_PARAM_TEST_CASE( 
-				&check_serialisation, 
-				markov_orders.begin(),
-				markov_orders.end() ),
-			0 );
-	}
-	catch (const std::exception & e)
-	{
-		cerr << "Registering tests - exception: " << e.what() << endl;
-	}
+    try
+    {
+        test->add( BOOST_TEST_CASE( &check_optional_serialisation ), 0 );
+        test->add( BOOST_TEST_CASE( &check_multi_array_serialisation ), 0 );
+        test->add(
+            BOOST_PARAM_TEST_CASE( 
+                &check_serialisation, 
+                markov_orders.begin(),
+                markov_orders.end() ),
+            0 );
+    }
+    catch (const std::exception & e)
+    {
+        cerr << "Registering tests - exception: " << e.what() << endl;
+        throw  boost::unit_test::framework::setup_error( e.what() );
+    }
+    return test;
+}
 
-    return test; 
+int main(int argc, char* argv[])
+{
+    return boost::unit_test::unit_test_main( &init_unit_test, argc, argv );
 }
 

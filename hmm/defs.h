@@ -1,7 +1,7 @@
 /**
 @file
 
-Copyright John Reid 2007, 2008, 2012
+Copyright John Reid 2007, 2008, 2012, 2015
 
 */
 
@@ -31,7 +31,7 @@ inline
 void
 assertion_failed( char const * expr, char const * function, char const * file, long line )
 {
-	myrrh::assertion_throw( expr, function, file, line );
+    myrrh::assertion_throw( expr, function, file, line );
 }
 }
 
@@ -79,7 +79,7 @@ assertion_failed( char const * expr, char const * function, char const * file, l
 
 
 
-#include <boost/test/utils/wrap_stringstream.hpp>
+// #include <boost/test/utils/wrap_stringstream.hpp>
 #define HMM_MAKE_STRING(x) ( boost::wrap_stringstream().ref() << x ).str()
 
 
