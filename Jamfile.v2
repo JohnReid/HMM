@@ -23,6 +23,7 @@ project Hmm
     : requirements
         <include>.
         <source>.//myrrh
+        <source>/site-config//seqan
         # <toolset>gcc:<cxxflags>"-fpermissive"
         <define>BOOST_PYTHON_NO_PY_SIGNATURES
         <include>$(NUMPY_PATH)/numpy/core/include
@@ -32,6 +33,7 @@ project Hmm
     : usage-requirements
         <include>.
         <source>.//myrrh
+        <source>/site-config//seqan
     : default-build release
     ;
 alias hmm ; # Header only library
@@ -55,6 +57,7 @@ local PY_EXT_REQS =
 python-extension _hmm
     : # sources
         src/python_module_hmm.cpp
+        src/python_numpy_converters.cpp
         src/python_model.cpp
         src/python_model_by_states.cpp
         src/python_markov_order.cpp
@@ -100,17 +103,18 @@ else
 install install_ext
     :
         $(EXTENSIONS)
+        # myrrh//_man
     :
         <variant>release:<location>$(RELEASE_INSTALL_DIR)
         <variant>debug:<location>$(DEBUG_INSTALL_DIR)
     ;
 install install_so
     :
-        /boost/python//boost_python
-        /boost/system//boost_system
-        /boost/serialization//boost_serialization
-        /boost/filesystem//boost_filesystem
-        # .//myrrh_pylib
+        # /boost/python//boost_python
+        # /boost/system//boost_system
+        # /boost/serialization//boost_serialization
+        # /boost/filesystem//boost_filesystem
+        # myrrh//myrrh_pylib
     :
         <variant>release:<location>$(RELEASE_INSTALL_DIR)
         <variant>debug:<location>$(DEBUG_INSTALL_DIR)
@@ -120,36 +124,6 @@ alias install_all : install_so install_ext ;
 explicit install_all ;
 
 
-
-install lib_install
-    :
-        /boost/python//boost_python
-        /boost/system//boost_system
-        /boost/filesystem//boost_filesystem
-        /boost/date_time//boost_date_time
-        hmm/myrrh//myrrh_pylib
-        fast
-        pvalues
-        steme
-        meme
-    :
-    ;
-
-install ext_install
-    :
-        _stempy
-        _index
-        _index_genome
-    :
-        <variant>release:<location>$(RELEASE_INSTALL_DIR)
-        <variant>debug:<location>$(DEBUG_INSTALL_DIR)
-        <install-dependencies>off
-    ;
-
-alias install : lib_install ext_install ;
-
-
-
 #
 # Test
 #
@@ -157,6 +131,7 @@ TEST_SRCS =
     serialisation
     count_mers
     consensus
+    markov
     markov_order
     hmm_ll_increases
     hmm_model

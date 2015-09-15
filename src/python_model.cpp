@@ -1,7 +1,7 @@
 /**
 @file
 
-Copyright John Reid 2007, 2012
+Copyright John Reid 2007, 2012, 2015
 
 */
 
@@ -30,17 +30,7 @@ Copyright John Reid 2007, 2012
 #include <myrrh/math.h>
 #include <myrrh/serialisable.h>
 #include <myrrh/python/numpy.h>
-#include <myrrh/python/multi_array_to_numpy.h>
 #include <myrrh/python/boost_range.h>
-
-namespace myrrh {
-namespace python {
-
-numpy_converter converter;
-std::string exposed_typechars;
-
-} //namespace myrrh
-} //namespace myrrh
 
 
 namespace hmm {
@@ -735,19 +725,6 @@ export_model()
     using namespace boost::python;
     using namespace indexing;
     using namespace myrrh::python;
-
-    //std::cout << "Exposing converters\n";
-    import_array(); //make sure we have initialised numpy API
-    expose_converters< npy_byte >();
-    expose_converters< npy_ubyte >();
-    expose_converters< npy_short >();
-    expose_converters< npy_ushort >();
-    expose_converters< npy_int >();
-    expose_converters< npy_uint >();
-    expose_converters< npy_long >();
-    expose_converters< npy_ulong >();
-    expose_converters< npy_longlong >();
-    expose_converters< npy_ulonglong >();
 
     myrrh::python::register_tuple_converter< training_result_tuple >();
     //myrrh::python::register_converter< double_vec_ptr >();

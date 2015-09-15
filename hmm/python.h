@@ -1,7 +1,7 @@
 /**
 @file
 
-Copyright John Reid 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014
+Copyright John Reid 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015
 
 */
 
@@ -63,6 +63,7 @@ as_string( const T & t )
     return HMM_MAKE_STRING( t );
 }
 
+HMM_EXPORT_FN_SPEC void export_numpy_converters();
 HMM_EXPORT_FN_SPEC void export_model();
 HMM_EXPORT_FN_SPEC void export_model_by_states();
 HMM_EXPORT_FN_SPEC void export_markov_order();
@@ -74,7 +75,7 @@ void c_string_translator( const char * x );
 void string_translator( const std::string & x );
 
 
-inline 
+inline
 boost::python::tuple
 boost_to_python_tuple( const boost::tuples::null_type & ) 
 {
@@ -82,7 +83,7 @@ boost_to_python_tuple( const boost::tuples::null_type & )
 }
 
 template< typename H, typename T >
-inline 
+inline
 boost::python::object 
 boost_to_python_tuple( const boost::tuples::cons< H, T > & x ) 
 {
